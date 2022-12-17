@@ -1,12 +1,3 @@
-import * as C from "./cmd";
-import { Cmd } from "./cmd";
-
-interface Program<Arg, Model, Msg, View> {
-    init: (arg: Arg) => [Model, Cmd<Msg>];
-}
-
-console.log(C.none);
-
 type VNode =
     | {
           type: "text";

@@ -1,10 +1,18 @@
 /** メッセージを投げる */
-type Dispatch<Msg> = (msg: Msg) => void;
+export type Dispatch<Msg> = (msg: Msg) => void;
 
-/** 副作用 (途中でメッセージを投げるかもしれない処理) */
-type Effect<Msg> = (dispatch: Dispatch<Msg>) => void;
+/**
+ * 副作用
+ *
+ * 途中でメッセージを投げるかもしれない処理
+ */
+export type Effect<Msg> = (dispatch: Dispatch<Msg>) => void;
 
-/** メッセージを投げるかもしれない副作用をまとめたコンテナ */
+/**
+ * コマンド
+ *
+ * メッセージを投げるかもしれない副作用をまとめたコンテナ
+ */
 export type Cmd<Msg> = Array<Effect<Msg>>;
 
 /** 何もしないコマンド */

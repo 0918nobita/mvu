@@ -1,5 +1,5 @@
-import { Dispatch } from "./cmd";
-import { Disposable } from "./disposable";
+import { Dispatch } from "./cmd.ts";
+import { Disposable } from "./disposable.ts";
 
 /** サブスクリプションの識別子 */
 export class SubId {
@@ -44,6 +44,8 @@ export class Sub<Msg> {
         this.#subscribeFns = subscribeFns;
     }
 
+    public static readonly none = new Sub<never>();
+
     public static add<A, B>(
         sub: Sub<A>,
         subId: SubId,
@@ -58,5 +60,3 @@ export class Sub<Msg> {
         );
     }
 }
-
-export const empty = new Sub<never>();

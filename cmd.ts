@@ -4,7 +4,7 @@ export type Dispatch<Msg> = (msg: Msg) => void;
 /**
  * 副作用
  *
- * 途中でメッセージを投げるかもしれない処理
+ * メッセージを投げるかもしれない、すぐに return する処理
  */
 export type Effect<Msg> = (dispatch: Dispatch<Msg>) => void;
 
@@ -13,26 +13,34 @@ export type Effect<Msg> = (dispatch: Dispatch<Msg>) => void;
  *
  * メッセージを投げるかもしれない副作用をまとめたコンテナ
  */
-export type Cmd<Msg> = Array<Effect<Msg>>;
+export class Cmd<Msg> {
+    #effects: Array<Effect<Msg>>;
 
-/** 何もしないコマンド */
-export const none: Cmd<never> = [];
+    constructor(...effects: Array<Effect<Msg>>) {
+        this.#effects = effects;
+    }
 
-/** ひとつの副作用を実行するコマンドを作る */
-export const ofEffect = <Msg>(effect: Effect<Msg>): Cmd<Msg> => [effect];
+    /** 何もしないコマンド */
+    public static readonly none = new Cmd<never>();
 
-/** コマンド中のメッセージを変換する */
-export const map = <MsgA, MsgB>(
-    cmd: Cmd<MsgA>,
-    f: (msgA: MsgA) => MsgB
-): Cmd<MsgB> =>
-    cmd.map(
-        (effect): Effect<MsgB> =>
-            (dispatchB) => {
-                const dispatchA = (msgA: MsgA) => dispatchB(f(msgA));
-                effect(dispatchA);
-            }
-    );
+    /** コマンド中のメッセージを変換する */
+    public static map<MsgA, MsgB>(
+        cmd: Cmd<MsgA>,
+        f: (msgA: MsgA) => MsgB
+    ): Cmd<MsgB> {
+        const effects = cmd.#effects.map(
+            (effect): Effect<MsgB> =>
+                (dispatchB) => {
+                    const dispatchA = (msgA: MsgA) => dispatchB(f(msgA));
+                    effect(dispatchA);
+                }
+        );
+        return new Cmd(...effects);
+    }
 
-/** コマンドを結合する */
-export const batch = <Msg>(...cmds: Array<Cmd<Msg>>): Cmd<Msg> => cmds.flat();
+    /** コマンドを結合する */
+    public static batch<Msg>(...cmds: Array<Cmd<Msg>>): Cmd<Msg> {
+        const effects = cmds.flatMap((cmd) => cmd.#effects);
+        return new Cmd(...effects);
+    }
+}

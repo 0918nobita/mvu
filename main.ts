@@ -1,6 +1,5 @@
 import { Cmd, Dispatch } from "./cmd.ts";
-import { Program, run } from "./program.ts";
-import { Sub } from "./sub.ts";
+import { Program, Sub, Subs, run } from "./program.ts";
 
 interface Arg {
     initialCount: number;
@@ -10,7 +9,7 @@ interface Model {
     count: number;
 }
 
-type Msg = "increment";
+type Msg = "increment" | "reset";
 
 const init = (arg: Arg): [Model, Cmd<Msg>] => [
     { count: arg.initialCount },
@@ -21,10 +20,30 @@ const update = (msg: Msg, model: Model): [Model, Cmd<Msg>] => {
     switch (msg) {
         case "increment":
             return [{ count: model.count + 1 }, Cmd.none];
+
+        case "reset":
+            return [{ count: 0 }, Cmd.none];
     }
 };
 
-const subscriptions = (_model: Model): Sub<Msg> => Sub.none;
+const subID = Symbol("reset");
+
+const sub: Sub<Msg> = (dispatch) => {
+    const id = setInterval(() => {
+        dispatch("reset");
+    }, 3000);
+    return {
+        dispose: () => {
+            clearInterval(id);
+        },
+    };
+};
+
+const subscriptions = (_model: Model): Subs<Msg> => {
+    const subs = Subs.empty<Msg>();
+    subs.set(subID, sub);
+    return subs;
+};
 
 let intervalSet = false;
 

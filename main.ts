@@ -32,6 +32,7 @@ const sub: Sub<Msg> = (dispatch) => {
     const id = setInterval(() => {
         dispatch("reset");
     }, 3000);
+
     return {
         dispose: () => {
             clearInterval(id);
@@ -39,11 +40,9 @@ const sub: Sub<Msg> = (dispatch) => {
     };
 };
 
-const subscriptions = (_model: Model): Subs<Msg> => {
-    const subs = Subs.empty<Msg>();
-    subs.set(subID, sub);
-    return subs;
-};
+const subs = Subs.singleton(subID, sub);
+
+const subscriptions = (_model: Model): Subs<Msg> => subs;
 
 let intervalSet = false;
 

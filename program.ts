@@ -46,11 +46,15 @@ export const SubIDs: SubIDsMod = {
 interface SubsMod {
     readonly empty: <Msg>() => Subs<Msg>;
 
+    readonly singleton: <Msg>(subID: SubID, sub: Sub<Msg>) => Subs<Msg>;
+
     readonly extractIDs: (subs: Subs<unknown>) => SubIDs;
 }
 
 export const Subs: SubsMod = {
     empty: () => new Map(),
+
+    singleton: (subID, sub) => new Map([[subID, sub]]),
 
     extractIDs: (subs) => new Set(subs.keys()),
 };

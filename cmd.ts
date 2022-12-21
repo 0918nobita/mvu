@@ -13,34 +13,27 @@ export type Effect<Msg> = (dispatch: Dispatch<Msg>) => void;
  *
  * メッセージを投げるかもしれない副作用をまとめたコンテナ
  */
-export class Cmd<Msg> {
-    #effects: Array<Effect<Msg>>;
+export type Cmd<Msg> = Set<Effect<Msg>>;
 
-    constructor(...effects: Array<Effect<Msg>>) {
-        this.#effects = effects;
-    }
-
+interface CmdMod {
     /** 何もしないコマンド */
-    public static readonly none = new Cmd<never>();
+    none: Cmd<never>;
 
-    /** コマンド中のメッセージを変換する */
-    public static map<MsgA, MsgB>(
-        cmd: Cmd<MsgA>,
-        f: (msgA: MsgA) => MsgB
-    ): Cmd<MsgB> {
-        const effects = cmd.#effects.map(
-            (effect): Effect<MsgB> =>
-                (dispatchB) => {
-                    const dispatchA = (msgA: MsgA) => dispatchB(f(msgA));
-                    effect(dispatchA);
-                }
-        );
-        return new Cmd(...effects);
-    }
+    /** 単一の副作用からコマンドを生成する */
+    ofEffect: <Msg>(effect: Effect<Msg>) => Cmd<Msg>;
 
-    /** コマンドを結合する */
-    public static batch<Msg>(...cmds: Array<Cmd<Msg>>): Cmd<Msg> {
-        const effects = cmds.flatMap((cmd) => cmd.#effects);
-        return new Cmd(...effects);
-    }
+    /** コマンドを実行する */
+    run: <Msg>(cmd: Cmd<Msg>, dispatch: Dispatch<Msg>) => void;
 }
+
+export const Cmd: CmdMod = {
+    none: new Set(),
+
+    ofEffect: (effect) => new Set([effect]),
+
+    run: (cmd, dispatch) => {
+        for (const effect of cmd) {
+            effect(dispatch);
+        }
+    },
+};

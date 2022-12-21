@@ -7,5 +7,5 @@ Deno 上で動作します。
 Deno のバージョンは asdf で管理しています。
 
 ```bash
-deno run main.ts
+deno run --allow-net main.ts
 ```

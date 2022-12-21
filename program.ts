@@ -22,9 +22,9 @@ export const run = <Arg, Model, Msg, View>(
     program: Program<Arg, Model, Msg, View>,
     arg: Arg
 ) => {
-    const [model, _cmd] = program.init(arg);
+    const [initialModel, initialCmd] = program.init(arg);
 
-    const model$ = new BehaviorSubject<Model>(model);
+    const model$ = new BehaviorSubject<Model>(initialModel);
 
     const msg$ = new Subject<Msg>();
 
@@ -38,8 +38,9 @@ export const run = <Arg, Model, Msg, View>(
 
     msg$.subscribe({
         next: (msg) => {
-            const updated = program.update(msg, model$.getValue());
-            model$.next(updated[0]);
+            const [newModel, newCmd] = program.update(msg, model$.getValue());
+            Cmd.run(newCmd, dispatch);
+            model$.next(newModel);
         },
     });
 
@@ -70,4 +71,6 @@ export const run = <Arg, Model, Msg, View>(
             console.log(renderedView);
         },
     });
+
+    Cmd.run(initialCmd, dispatch);
 };

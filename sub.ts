@@ -8,6 +8,11 @@ export type TaskID = symbol;
 
 export type Sub<Msg> = Map<TaskID, TaskWithDispatch<Msg>>;
 
+interface Plan {
+    toStart: Set<TaskID>;
+    toDispose: Set<TaskID>;
+}
+
 interface SubMod {
     /** 何もしないサブスクリプション */
     none: <Msg>() => Sub<Msg>;
@@ -17,11 +22,6 @@ interface SubMod {
 
     /** ２つのサブスクリプションを比較し、どのタスクを開始し、どのタスクを dispose するかを決定する */
     diff: <Msg>(subA: Sub<Msg>, subB: Sub<Msg>) => Plan;
-}
-
-interface Plan {
-    toStart: Set<TaskID>;
-    toDispose: Set<TaskID>;
 }
 
 export const Sub: SubMod = {

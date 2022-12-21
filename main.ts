@@ -1,5 +1,6 @@
 import { Cmd, Dispatch } from "./cmd.ts";
-import { Program, Sub, Subs, run } from "./program.ts";
+import { Program, run } from "./program.ts";
+import { Sub, TaskWithDispatch } from "./sub.ts";
 
 interface Arg {
     initialCount: number;
@@ -26,9 +27,9 @@ const update = (msg: Msg, model: Model): [Model, Cmd<Msg>] => {
     }
 };
 
-const subID = Symbol("reset");
+const taskID = Symbol("reset");
 
-const sub: Sub<Msg> = (dispatch) => {
+const task: TaskWithDispatch<Msg> = (dispatch) => {
     const id = setInterval(() => {
         dispatch("reset");
     }, 3000);
@@ -40,9 +41,9 @@ const sub: Sub<Msg> = (dispatch) => {
     };
 };
 
-const subs = Subs.singleton(subID, sub);
+const sub = Sub.ofTask(taskID, task);
 
-const subscriptions = (_model: Model): Subs<Msg> => subs;
+const subscriptions = (_model: Model): Sub<Msg> => sub;
 
 let intervalSet = false;
 

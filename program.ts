@@ -1,63 +1,7 @@
 import { Cmd, Dispatch } from "./cmd.ts";
+import { Disposable } from "./disposable.ts";
 import { BehaviorSubject, Subject } from "./stream/mod.ts";
-
-interface Disposable {
-    dispose: () => void;
-}
-
-export type Sub<Msg> = (dispatch: Dispatch<Msg>) => Disposable;
-
-type SubID = symbol;
-
-type SubIDs = Set<SubID>;
-
-export type Subs<Msg> = Map<SubID, Sub<Msg>>;
-
-interface Plan {
-    toStart: Set<symbol>;
-    toDispose: Set<symbol>;
-}
-
-interface SubIDsMod {
-    readonly diff: (subIDsA: SubIDs, subIDsB: SubIDs) => Plan;
-}
-
-export const SubIDs: SubIDsMod = {
-    diff: (subIDsA, subIDsB) => {
-        const toStart = new Set<SubID>();
-        const toDispose = new Set<SubID>();
-
-        for (const subID of subIDsB) {
-            if (!subIDsA.has(subID)) {
-                toStart.add(subID);
-            }
-        }
-
-        for (const subID of subIDsA) {
-            if (!subIDsB.has(subID)) {
-                toDispose.add(subID);
-            }
-        }
-
-        return { toStart, toDispose };
-    },
-};
-
-interface SubsMod {
-    readonly empty: <Msg>() => Subs<Msg>;
-
-    readonly singleton: <Msg>(subID: SubID, sub: Sub<Msg>) => Subs<Msg>;
-
-    readonly extractIDs: (subs: Subs<unknown>) => SubIDs;
-}
-
-export const Subs: SubsMod = {
-    empty: () => new Map(),
-
-    singleton: (subID, sub) => new Map([[subID, sub]]),
-
-    extractIDs: (subs) => new Set(subs.keys()),
-};
+import { Sub, TaskID } from "./sub.ts";
 
 /** dispatch ループを生成・実行する */
 export interface Program<Arg, Model, Msg, View> {
@@ -65,7 +9,7 @@ export interface Program<Arg, Model, Msg, View> {
 
     update: (msg: Msg, model: Model) => [Model, Cmd<Msg>];
 
-    subscriptions: (model: Model) => Subs<Msg>;
+    subscriptions: (model: Model) => Sub<Msg>;
 
     view: (model: Model, dispatch: Dispatch<Msg>) => View;
 }
@@ -80,9 +24,9 @@ export const run = <Arg, Model, Msg, View>(
 
     const msg$ = new Subject<Msg>();
 
-    let activeSubIDs = new Set<SubID>();
+    let activeSub = Sub.none<Msg>();
 
-    const disposables = new Map<SubID, Disposable>();
+    const disposables = new Map<TaskID, Disposable>();
 
     const dispatch = (msg: Msg) => {
         msg$.next(msg);
@@ -97,10 +41,9 @@ export const run = <Arg, Model, Msg, View>(
 
     model$.subscribe({
         next: (model) => {
-            const newSubs = program.subscriptions(model);
-            const newSubIDs = Subs.extractIDs(newSubs);
+            const newSub = program.subscriptions(model);
 
-            const plan = SubIDs.diff(activeSubIDs, newSubIDs);
+            const plan = Sub.diff(activeSub, newSub);
 
             for (const subID of plan.toDispose) {
                 const sub = disposables.get(subID);
@@ -111,13 +54,13 @@ export const run = <Arg, Model, Msg, View>(
             }
 
             for (const subID of plan.toStart) {
-                const sub = newSubs.get(subID);
+                const sub = newSub.get(subID);
                 if (!sub)
                     throw new Error("Subscription to start was not found");
                 disposables.set(subID, sub(dispatch));
             }
 
-            activeSubIDs = newSubIDs;
+            activeSub = newSub;
 
             const renderedView = program.view(model, dispatch);
             console.log(renderedView);

@@ -3,17 +3,21 @@ import { Disposable } from "./disposable.ts";
 import { BehaviorSubject, Subject } from "./stream/mod.ts";
 import { Sub, TaskID } from "./sub.ts";
 
-/** dispatch ループを生成・実行する */
 export interface Program<Arg, Model, Msg, View> {
+    /** 引数をもとに、プログラムの初期状態 (モデル、実行するコマンド) を求める */
     init: (arg: Arg) => [Model, Cmd<Msg>];
 
+    /** dispatch されたメッセージと現在のモデルをもとにして、モデルを更新しコマンドを生成する */
     update: (msg: Msg, model: Model) => [Model, Cmd<Msg>];
 
+    /** モデルをもとにして、サブスクリプションを生成する */
     subscriptions: (model: Model) => Sub<Msg>;
 
+    /** モデルをもとにして、ビューを生成する */
     view: (model: Model, dispatch: Dispatch<Msg>) => View;
 }
 
+/** dispatch ループを実行する */
 export const run = <Arg, Model, Msg, View>(
     program: Program<Arg, Model, Msg, View>,
     arg: Arg

@@ -9,10 +9,13 @@ export type TaskID = symbol;
 export type Sub<Msg> = Map<TaskID, TaskWithDispatch<Msg>>;
 
 interface SubMod {
+    /** 何もしないサブスクリプション */
     none: <Msg>() => Sub<Msg>;
 
+    /** 単一のタスクからサブスクリプションを生成する */
     ofTask: <Msg>(taskID: TaskID, task: TaskWithDispatch<Msg>) => Sub<Msg>;
 
+    /** ２つのサブスクリプションを比較し、どのタスクを開始し、どのタスクを dispose するかを決定する */
     diff: <Msg>(subA: Sub<Msg>, subB: Sub<Msg>) => Plan;
 }
 

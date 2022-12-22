@@ -30,7 +30,7 @@ export const run = <Arg, Model, Msg, View>(
 
     let activeSub = Sub.none<Msg>();
 
-    const disposables = new Map<TaskID, Disposable>();
+    const tasks = new Map<TaskID, Disposable>();
 
     const dispatch = (msg: Msg) => {
         msg$.next(msg);
@@ -50,19 +50,17 @@ export const run = <Arg, Model, Msg, View>(
 
             const plan = Sub.diff(activeSub, newSub);
 
-            for (const subID of plan.toDispose) {
-                const sub = disposables.get(subID);
-                if (!sub)
-                    throw new Error("Subscription to dispose was not found");
-                sub.dispose();
-                disposables.delete(subID);
+            for (const taskID of plan.toDispose) {
+                const task = tasks.get(taskID);
+                if (!task) throw new Error("Task to dispose was not found");
+                task.dispose();
+                tasks.delete(taskID);
             }
 
-            for (const subID of plan.toStart) {
-                const sub = newSub.get(subID);
-                if (!sub)
-                    throw new Error("Subscription to start was not found");
-                disposables.set(subID, sub(dispatch));
+            for (const taskID of plan.toStart) {
+                const task = newSub.get(taskID);
+                if (!task) throw new Error("Task to start was not found");
+                tasks.set(taskID, task(dispatch));
             }
 
             activeSub = newSub;

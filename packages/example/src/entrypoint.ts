@@ -61,7 +61,9 @@ const getRandomNum: Cmd<Msg> = Cmd.ofEffect(async (dispatch) => {
     const res = await fetch(
         "http://www.randomnumberapi.com/api/v1.0/random?min=100&max=500"
     );
+
     const data: number[] = await res.json();
+
     console.log("%cRandom number received", "color: green");
     dispatch({ type: "randomNumReceived", num: data[0] });
 });

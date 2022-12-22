@@ -1,7 +1,7 @@
-import { Cmd, Dispatch } from "./cmd.ts";
-import { Disposable } from "./disposable.ts";
-import { BehaviorSubject, Subject } from "./stream/mod.ts";
-import { Sub, TaskID } from "./sub.ts";
+import { Cmd, Dispatch } from "./cmd";
+import { Disposable } from "./disposable";
+import { BehaviorSubject, Subject } from "./stream";
+import { Sub, TaskID } from "./sub";
 
 export interface Program<Arg, Model, Msg, View> {
     /** 引数をもとに、プログラムの初期状態 (モデル、実行するコマンド) を求める */

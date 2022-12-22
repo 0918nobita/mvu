@@ -1,5 +1,5 @@
-import { Subscriber } from "./subscriber.ts";
-import { Subscription } from "./subscription.ts";
+import { Subscriber } from "./subscriber";
+import { Subscription } from "./subscription";
 
 export class BehaviorSubject<Item> {
     #value: Item;

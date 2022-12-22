@@ -1,6 +1,11 @@
-import { Cmd, Dispatch } from "./cmd.ts";
-import { Program, run } from "./program.ts";
-import { Sub, TaskWithDispatch } from "./sub.ts";
+import {
+    Cmd,
+    Dispatch,
+    Sub,
+    TaskWithDispatch,
+    Program,
+    run,
+} from "@0918nobita-mvu/framework";
 
 // ARGUMENT
 

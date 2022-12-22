@@ -1,0 +1,6 @@
+version: '3'
+
+tasks:
+  build: pnpm exec vite build
+
+  dev: pnpm exec vite

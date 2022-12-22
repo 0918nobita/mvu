@@ -1,5 +1,5 @@
-import { Dispatch } from "./cmd.ts";
-import { Disposable } from "./disposable.ts";
+import { Dispatch } from "./cmd";
+import { Disposable } from "./disposable";
 
 /** 実行中にメッセージを dispatch できるタスク */
 export type TaskWithDispatch<Msg> = (dispatch: Dispatch<Msg>) => Disposable;

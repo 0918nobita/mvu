@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  prepare: pnpm install
+
+  build:
+    - task: framework:build
+    - task: example:build
+  dev:
+    deps:
+      - framework:watch
+      - example:dev
+
+includes:
+  framework:
+    taskfile: ./packages/framework/Taskfile.yml
+    dir: ./packages/framework
+
+  example:
+    taskfile: ./packages/example/Taskfile.yml
+    dir: ./packages/example

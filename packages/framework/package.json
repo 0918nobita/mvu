@@ -1,0 +1,13 @@
+{
+  "name": "@0918nobita-mvu/framework",
+  "version": "0.1.0",
+  "description": "MVU framework",
+  "license": "CC0-1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "4.9.4"
+  }
+}

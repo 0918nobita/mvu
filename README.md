@@ -1,11 +1,27 @@
-# MVU ランタイム
+# 自作 MVU フレームワーク
 
-Model (型定義), View (関数), Update (関数) で構成されるアプリのランタイムです。
+## 開発ツールの導入
 
-Deno 上で動作します。
-
-Deno のバージョンは asdf で管理しています。
+[asdf](https://asdf-vm.com/) を利用しています。
 
 ```bash
-deno run --allow-net main.ts
+asdf install
+```
+
+## 依存パッケージのインストール
+
+```bash
+task prepare
+```
+
+## ビルド
+
+```bash
+task build
+```
+
+## 開発サーバの起動
+
+```bash
+task dev
 ```

@@ -1,0 +1,12 @@
+{
+  "name": "@0918nobita-mvu/example",
+  "version": "0.1.0",
+  "license": "CC0-1.0",
+  "dependencies": {
+    "@0918nobita-mvu/framework": "workspace:../framework"
+  },
+  "devDependencies": {
+    "typescript": "4.9.4",
+    "vite": "4.0.3"
+  }
+}

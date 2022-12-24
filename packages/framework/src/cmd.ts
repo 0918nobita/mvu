@@ -1,5 +1,4 @@
-/** メッセージを投げる */
-export type Dispatch<Msg> = (msg: Msg) => void;
+import { Dispatch } from "@0918nobita-mvu/renderer";
 
 /**
  * 副作用

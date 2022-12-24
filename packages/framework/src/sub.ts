@@ -1,4 +1,5 @@
-import { Dispatch } from "./cmd";
+import { Dispatch } from "@0918nobita-mvu/renderer";
+
 import { Disposable } from "./disposable";
 
 /** 実行中にメッセージを dispatch できるタスク */

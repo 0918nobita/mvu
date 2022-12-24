@@ -1,6 +1,6 @@
-import { Renderer } from "@0918nobita-mvu/renderer";
+import { Dispatch, Renderer } from "@0918nobita-mvu/renderer";
 
-import { Cmd, Dispatch } from "./cmd";
+import { Cmd } from "./cmd";
 import { Disposable } from "./disposable";
 import { BehaviorSubject, Subject } from "./stream";
 import { Sub, TaskID } from "./sub";
@@ -23,7 +23,7 @@ export interface Program<Arg, Model, Msg, View> {
 export const run = <Arg, Model, Msg, View>(
     program: Program<Arg, Model, Msg, View>,
     arg: Arg,
-    renderer: Renderer<View>
+    renderer: Renderer<View, Msg>
 ) => {
     const [initialModel, initialCmd] = program.init(arg);
 
@@ -69,7 +69,7 @@ export const run = <Arg, Model, Msg, View>(
             activeSub = newSub;
 
             const view = program.view(model, dispatch);
-            renderer(view);
+            renderer(view, dispatch);
         },
     });
 

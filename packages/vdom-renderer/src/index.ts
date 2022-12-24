@@ -5,18 +5,19 @@ export type VNodeText = {
     text: string;
 };
 
-export type VNodeTag = {
+export type VNodeTag<Msg> = {
     type: "tag";
-    tagName: "p";
-    children: VNode[];
+    tagName: string;
+    children: VNode<Msg>[];
+    events: Record<string, Msg>;
 };
 
-export type VNodeFragment = {
+export type VNodeFragment<Msg> = {
     type: "fragment";
-    children: VNode[];
+    children: VNode<Msg>[];
 };
 
-export type VNode = VNodeText | VNodeTag | VNodeFragment;
+export type VNode<Msg> = VNodeText | VNodeTag<Msg> | VNodeFragment<Msg>;
 
 export type LinkedVNodeText = {
     type: "text";
@@ -26,9 +27,9 @@ export type LinkedVNodeText = {
 
 export type LinkedVNodeTag = {
     type: "tag";
-    tagName: "p";
+    tagName: string;
     children: LinkedVNode[];
-    linkedElement: HTMLParagraphElement;
+    linkedElement: HTMLElement;
 };
 
 export type LinkedVNodeFragment = {
@@ -51,13 +52,13 @@ const renderVNodeText = (vnodeText: VNodeText): LinkedVNodeText => {
     };
 };
 
-function renderVNodeFragment(
-    vnodeFragment: VNodeFragment,
+function renderVNodeFragment<Msg>(
+    fragment: VNodeFragment<Msg>,
     parentElement: HTMLElement
 ): LinkedVNodeFragment {
     const children: LinkedVNode[] = [];
 
-    for (const child of vnodeFragment.children) {
+    for (const child of fragment.children) {
         switch (child.type) {
             case "tag": {
                 const renderedChild = renderVNodeTag(child);
@@ -83,12 +84,12 @@ function renderVNodeFragment(
     };
 }
 
-function renderVNodeTag(vnodeTag: VNodeTag): LinkedVNodeTag {
-    const element = document.createElement(vnodeTag.tagName);
+function renderVNodeTag<Msg>(tag: VNodeTag<Msg>): LinkedVNodeTag {
+    const element = document.createElement(tag.tagName);
 
     const children: LinkedVNode[] = [];
 
-    for (const child of vnodeTag.children) {
+    for (const child of tag.children) {
         switch (child.type) {
             case "fragment": {
                 const fragment = renderVNodeFragment(child, element);
@@ -118,15 +119,15 @@ function renderVNodeTag(vnodeTag: VNodeTag): LinkedVNodeTag {
     }
     return {
         type: "tag",
-        tagName: vnodeTag.tagName,
+        tagName: tag.tagName,
         children,
         linkedElement: element,
     };
 }
 
-const update = (
+const update = <Msg>(
     oldVNode: LinkedVNode,
-    newVNode: VNode,
+    newVNode: VNode<Msg>,
     parentElement: HTMLElement
 ): LinkedVNode => {
     if (oldVNode.type === "fragment") {
@@ -227,13 +228,15 @@ const update = (
     };
 };
 
-export const createRenderer = (root: HTMLElement): Renderer<VNode> => {
+export const createRenderer = <Msg>(
+    root: HTMLElement
+): Renderer<VNode<Msg>, Msg> => {
     let currentVNode: LinkedVNode = {
         type: "fragment",
         children: [],
     };
 
-    const renderer: Renderer<VNode> = (vnode) => {
+    const renderer: Renderer<VNode<Msg>, Msg> = (vnode) => {
         const updated = update(currentVNode, vnode, root);
         currentVNode = updated;
     };

@@ -93,7 +93,7 @@ const subscriptions = (_model: Model): Sub<Msg> => sub;
 
 let timeoutSet = false;
 
-const view = (model: Model, dispatch: Dispatch<Msg>): VNode => {
+const view = (model: Model, dispatch: Dispatch<Msg>): VNode<Msg> => {
     if (!timeoutSet) {
         setTimeout(() => {
             dispatch({ type: "getRandomNum" });
@@ -105,12 +105,15 @@ const view = (model: Model, dispatch: Dispatch<Msg>): VNode => {
         type: "tag",
         tagName: "p",
         children: [{ type: "text", text: `Count: ${model.count}` }],
+        events: {
+            onClick: { type: "increment" },
+        },
     };
 };
 
 // MAIN
 
-const program: Program<Arg, Model, Msg, VNode> = {
+const program: Program<Arg, Model, Msg, VNode<Msg>> = {
     init,
     update,
     subscriptions,

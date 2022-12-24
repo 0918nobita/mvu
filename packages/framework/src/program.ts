@@ -5,7 +5,7 @@ import { Disposable } from "./disposable";
 import { BehaviorSubject, Subject } from "./stream";
 import { Sub, TaskID } from "./sub";
 
-export interface Program<Arg, Model, Msg, View> {
+export type Program<Arg, Model, Msg, View> = {
     /** 引数をもとに、プログラムの初期状態 (モデル、実行するコマンド) を求める */
     init: (arg: Arg) => [Model, Cmd<Msg>];
 
@@ -17,7 +17,7 @@ export interface Program<Arg, Model, Msg, View> {
 
     /** モデルをもとにして、ビューを生成する */
     view: (model: Model) => View;
-}
+};
 
 /** dispatch ループを実行する */
 export const run = <Arg, Model, Msg, View>(

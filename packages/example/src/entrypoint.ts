@@ -3,15 +3,15 @@ import { VNode, createRenderer } from "@0918nobita-mvu/vdom-renderer";
 
 // ARGUMENT
 
-interface Arg {
+type Arg = {
     initialCount: number;
-}
+};
 
 // MODEL
 
-interface Model {
+type Model = {
     count: number;
-}
+};
 
 // MESSAGE
 

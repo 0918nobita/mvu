@@ -14,7 +14,7 @@ export type Effect<Msg> = (dispatch: Dispatch<Msg>) => void;
  */
 export type Cmd<Msg> = Set<Effect<Msg>>;
 
-interface CmdMod {
+type CmdMod = {
     /** 何もしないコマンド */
     none: Cmd<never>;
 
@@ -23,7 +23,7 @@ interface CmdMod {
 
     /** コマンドを実行する */
     run: <Msg>(cmd: Cmd<Msg>, dispatch: Dispatch<Msg>) => void;
-}
+};
 
 export const Cmd: CmdMod = {
     none: new Set(),

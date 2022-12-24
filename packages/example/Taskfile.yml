@@ -1,6 +1,11 @@
 version: '3'
 
 tasks:
-  build: pnpm exec vite build
+  build:
+    cmds:
+      - pnpm exec vite build
+    sources:
+      - index.html
+      - src/**/*.ts
 
-  dev: pnpm exec vite
+  dev: pnpm exec vite --clearScreen false

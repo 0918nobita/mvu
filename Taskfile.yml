@@ -4,14 +4,32 @@ tasks:
   prepare: pnpm install
 
   build:
+    - task: renderer:build
+    - task: console-renderer:build
+    - task: vdom-renderer:build
     - task: framework:build
     - task: example:build
   dev:
     deps:
+      - renderer:watch
+      - console-renderer:watch
+      - vdom-renderer:watch
       - framework:watch
       - example:dev
 
 includes:
+  renderer:
+    taskfile: ./packages/renderer/Taskfile.yml
+    dir: ./packages/renderer
+
+  console-renderer:
+    taskfile: ./packages/console-renderer/Taskfile.yml
+    dir: ./packages/console-renderer
+
+  vdom-renderer:
+    taskfile: ./packages/vdom-renderer/Taskfile.yml
+    dir: ./packages/vdom-renderer
+
   framework:
     taskfile: ./packages/framework/Taskfile.yml
     dir: ./packages/framework

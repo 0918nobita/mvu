@@ -1,3 +1,5 @@
+import { Renderer } from "@0918nobita-mvu/renderer";
+
 import { Cmd, Dispatch } from "./cmd";
 import { Disposable } from "./disposable";
 import { BehaviorSubject, Subject } from "./stream";
@@ -20,7 +22,8 @@ export interface Program<Arg, Model, Msg, View> {
 /** dispatch ループを実行する */
 export const run = <Arg, Model, Msg, View>(
     program: Program<Arg, Model, Msg, View>,
-    arg: Arg
+    arg: Arg,
+    renderer: Renderer<View>
 ) => {
     const [initialModel, initialCmd] = program.init(arg);
 
@@ -65,8 +68,8 @@ export const run = <Arg, Model, Msg, View>(
 
             activeSub = newSub;
 
-            const renderedView = program.view(model, dispatch);
-            console.log(renderedView);
+            const view = program.view(model, dispatch);
+            renderer(view);
         },
     });
 

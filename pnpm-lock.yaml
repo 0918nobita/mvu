@@ -5,20 +5,49 @@ importers:
   .:
     specifiers: {}
 
+  packages/console-renderer:
+    specifiers:
+      '@0918nobita-mvu/renderer': workspace:../renderer
+      typescript: 4.9.4
+    dependencies:
+      '@0918nobita-mvu/renderer': link:../renderer
+    devDependencies:
+      typescript: 4.9.4
+
   packages/example:
     specifiers:
       '@0918nobita-mvu/framework': workspace:../framework
+      '@0918nobita-mvu/vdom-renderer': workspace:../vdom-renderer
       typescript: 4.9.4
       vite: 4.0.3
     dependencies:
       '@0918nobita-mvu/framework': link:../framework
+      '@0918nobita-mvu/vdom-renderer': link:../vdom-renderer
     devDependencies:
       typescript: 4.9.4
       vite: 4.0.3
 
   packages/framework:
     specifiers:
+      '@0918nobita-mvu/renderer': workspace:../renderer
       typescript: 4.9.4
+    dependencies:
+      '@0918nobita-mvu/renderer': link:../renderer
+    devDependencies:
+      typescript: 4.9.4
+
+  packages/renderer:
+    specifiers:
+      typescript: 4.9.4
+    devDependencies:
+      typescript: 4.9.4
+
+  packages/vdom-renderer:
+    specifiers:
+      '@0918nobita-mvu/renderer': workspace:../renderer
+      typescript: 4.9.4
+    dependencies:
+      '@0918nobita-mvu/renderer': link:../renderer
     devDependencies:
       typescript: 4.9.4
 

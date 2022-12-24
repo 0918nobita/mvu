@@ -8,3 +8,5 @@ tasks:
       - src/**/*.ts
 
   watch: pnpm exec tsc --watch --preserveWatchOutput
+
+  clean: rm -rf dist

@@ -6,6 +6,7 @@ import {
     Program,
     run,
 } from "@0918nobita-mvu/framework";
+import { VNode, createRenderer } from "@0918nobita-mvu/vdom-renderer";
 
 // ARGUMENT
 
@@ -92,7 +93,7 @@ const subscriptions = (_model: Model): Sub<Msg> => sub;
 
 let timeoutSet = false;
 
-const view = (model: Model, dispatch: Dispatch<Msg>) => {
+const view = (model: Model, dispatch: Dispatch<Msg>): VNode => {
     if (!timeoutSet) {
         setTimeout(() => {
             dispatch({ type: "getRandomNum" });
@@ -100,16 +101,20 @@ const view = (model: Model, dispatch: Dispatch<Msg>) => {
         timeoutSet = true;
     }
 
-    return `Count: ${model.count}`;
+    return { type: "text", text: `Count: ${model.count}` };
 };
 
 // MAIN
 
-const program: Program<Arg, Model, Msg, string> = {
+const program: Program<Arg, Model, Msg, VNode> = {
     init,
     update,
     subscriptions,
     view,
 };
 
-run(program, { initialCount: 0 });
+run(
+    program,
+    { initialCount: 0 },
+    createRenderer(document.getElementById("app")!)
+);

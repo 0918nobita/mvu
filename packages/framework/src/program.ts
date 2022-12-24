@@ -16,7 +16,7 @@ export interface Program<Arg, Model, Msg, View> {
     subscriptions: (model: Model) => Sub<Msg>;
 
     /** モデルをもとにして、ビューを生成する */
-    view: (model: Model, dispatch: Dispatch<Msg>) => View;
+    view: (model: Model) => View;
 }
 
 /** dispatch ループを実行する */
@@ -68,7 +68,7 @@ export const run = <Arg, Model, Msg, View>(
 
             activeSub = newSub;
 
-            const view = program.view(model, dispatch);
+            const view = program.view(model);
             renderer(view, dispatch);
         },
     });

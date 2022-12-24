@@ -1,4 +1,4 @@
-import { Dispatch, Renderer } from "@0918nobita-mvu/renderer";
+import { Renderer } from "@0918nobita-mvu/renderer";
 
 import { Cmd } from "./cmd";
 import { Disposable } from "./disposable";

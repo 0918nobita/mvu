@@ -61,13 +61,16 @@ function renderVNodeFragment(
         switch (child.type) {
             case "tag": {
                 const renderedChild = renderVNodeTag(child);
+
                 children.push(renderedChild);
+
                 parentElement.appendChild(renderedChild.linkedElement);
                 break;
             }
 
             case "fragment": {
                 const renderedChild = renderVNodeFragment(child, parentElement);
+
                 children.push(renderedChild);
                 break;
             }
@@ -87,15 +90,27 @@ function renderVNodeTag(vnodeTag: VNodeTag): LinkedVNodeTag {
 
     for (const child of vnodeTag.children) {
         switch (child.type) {
-            case "tag": {
-                const renderedChild = renderVNodeTag(child);
-                element.appendChild(renderedChild.linkedElement);
-                children.push(renderedChild);
+            case "fragment": {
+                const fragment = renderVNodeFragment(child, element);
+
+                children.push(...fragment.children);
                 break;
             }
 
-            case "fragment": {
-                const renderedChild = renderVNodeFragment(child, element);
+            case "text": {
+                const text = renderVNodeText(child);
+
+                children.push(text);
+
+                element.appendChild(text.linkedTextNode);
+                break;
+            }
+
+            case "tag": {
+                const renderedChild = renderVNodeTag(child);
+
+                element.appendChild(renderedChild.linkedElement);
+
                 children.push(renderedChild);
                 break;
             }
@@ -117,20 +132,25 @@ const update = (
     if (oldVNode.type === "fragment") {
         if (newVNode.type === "fragment") {
             const children: LinkedVNode[] = [];
+
             for (const [index, child] of newVNode.children.entries()) {
                 const newChild = update(
                     oldVNode.children[index],
                     child,
                     parentElement
                 );
+
                 children.push(newChild);
             }
+
             return { type: "fragment", children };
         }
 
         if (newVNode.type === "text") {
             const text = renderVNodeText(newVNode);
+
             parentElement.appendChild(text.linkedTextNode);
+
             return {
                 type: "text",
                 text: newVNode.text,
@@ -139,18 +159,22 @@ const update = (
         }
 
         const tag = renderVNodeTag(newVNode);
+
         parentElement.appendChild(tag.linkedElement);
+
         return tag;
     }
 
     if (oldVNode.type === "text") {
         if (newVNode.type === "fragment") {
             parentElement.removeChild(oldVNode.linkedTextNode);
+
             return renderVNodeFragment(newVNode, parentElement);
         }
 
         if (newVNode.type === "text") {
             oldVNode.linkedTextNode.textContent = newVNode.text;
+
             return {
                 type: "text",
                 text: newVNode.text,
@@ -159,32 +183,42 @@ const update = (
         }
 
         parentElement.removeChild(oldVNode.linkedTextNode);
+
         const tag = renderVNodeTag(newVNode);
+
         parentElement.appendChild(tag.linkedElement);
+
         return tag;
     }
 
     if (newVNode.type === "fragment") {
         parentElement.removeChild(oldVNode.linkedElement);
+
         return renderVNodeFragment(newVNode, parentElement);
     }
 
     if (newVNode.type === "text") {
         parentElement.removeChild(oldVNode.linkedElement);
+
         const text = renderVNodeText(newVNode);
+
         parentElement.appendChild(text.linkedTextNode);
+
         return text;
     }
 
     const children: LinkedVNode[] = [];
+
     for (const [index, child] of newVNode.children.entries()) {
         const newChild = update(
             oldVNode.children[index],
             child,
             oldVNode.linkedElement
         );
+
         children.push(newChild);
     }
+
     return {
         type: "tag",
         tagName: newVNode.tagName,

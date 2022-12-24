@@ -101,7 +101,11 @@ const view = (model: Model, dispatch: Dispatch<Msg>): VNode => {
         timeoutSet = true;
     }
 
-    return { type: "text", text: `Count: ${model.count}` };
+    return {
+        type: "tag",
+        tagName: "p",
+        children: [{ type: "text", text: `Count: ${model.count}` }],
+    };
 };
 
 // MAIN

@@ -72,7 +72,7 @@ function renderVNodeFragment<Msg>(
             case "fragment": {
                 const renderedChild = renderVNodeFragment(child, parentElement);
 
-                children.push(renderedChild);
+                children.push(...renderedChild.children);
                 break;
             }
         }
@@ -134,14 +134,62 @@ const update = <Msg>(
         if (newVNode.type === "fragment") {
             const children: LinkedVNode[] = [];
 
-            for (const [index, child] of newVNode.children.entries()) {
-                const newChild = update(
-                    oldVNode.children[index],
-                    child,
-                    parentElement
-                );
+            if (oldVNode.children.length >= newVNode.children.length) {
+                for (let i = 0; i < newVNode.children.length; i++) {
+                    const newChild = update(
+                        oldVNode.children[i],
+                        newVNode.children[i],
+                        parentElement
+                    );
 
-                children.push(newChild);
+                    children.push(newChild);
+                }
+
+                for (
+                    let i = newVNode.children.length;
+                    i < oldVNode.children.length;
+                    i++
+                ) {
+                    parentElement.removeChild(parentElement.lastChild!);
+                }
+            } else {
+                for (let i = 0; i < oldVNode.children.length; i++) {
+                    const newChild = update(
+                        oldVNode.children[i],
+                        newVNode.children[i],
+                        parentElement
+                    );
+
+                    children.push(newChild);
+                }
+
+                for (
+                    let i = oldVNode.children.length;
+                    i < newVNode.children.length;
+                    i++
+                ) {
+                    const newChild = newVNode.children[i];
+
+                    if (newChild.type === "fragment") {
+                        const fragment = renderVNodeFragment(
+                            newChild,
+                            parentElement
+                        );
+                        children.push(...fragment.children);
+                        continue;
+                    }
+
+                    if (newChild.type === "text") {
+                        const text = renderVNodeText(newChild);
+                        parentElement.appendChild(text.linkedTextNode);
+                        children.push(text);
+                        continue;
+                    }
+
+                    const tag = renderVNodeTag(newChild);
+                    parentElement.appendChild(tag.linkedElement);
+                    children.push(tag);
+                }
             }
 
             return { type: "fragment", children };

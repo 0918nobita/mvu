@@ -1,4 +1,10 @@
-import { Cmd, Sub, Program, run } from "@0918nobita-mvu/framework";
+import {
+    Cmd,
+    Sub,
+    Program,
+    TaskWithDispatch,
+    run,
+} from "@0918nobita-mvu/framework";
 import { VNode, createRenderer } from "@0918nobita-mvu/vdom-renderer";
 
 // ARGUMENT
@@ -36,17 +42,54 @@ const update = (msg: Msg, model: Model): [Model, Cmd<Msg>] => {
     }
 };
 
-const subscriptions = (_model: Model): Sub<Msg> => Sub.none();
+// SUBSCRIPTIONS
+
+const taskID = Symbol("reset");
+
+const task: TaskWithDispatch<Msg> = (dispatch) => {
+    const id = setInterval(() => {
+        dispatch({ type: "increment" });
+    }, 1000);
+
+    return {
+        dispose: () => {
+            clearInterval(id);
+        },
+    };
+};
+
+const sub = Sub.ofTask(taskID, task);
+
+const subscriptions = (_model: Model): Sub<Msg> => sub;
 
 // VIEW
 
 const view = (model: Model): VNode<Msg> => ({
-    type: "tag",
-    tagName: "p",
-    children: [{ type: "text", text: `Count: ${model.count}` }],
-    events: {
-        onClick: { type: "increment" },
-    },
+    type: "fragment",
+    children: [
+        {
+            type: "tag",
+            tagName: "p",
+            children: [{ type: "text", text: `Count: ${model.count}` }],
+            events: {},
+        },
+        {
+            type: "tag",
+            tagName: "button",
+            children: [{ type: "text", text: "+1" }],
+            events: {
+                click: { type: "increment" },
+            },
+        },
+        {
+            type: "tag",
+            tagName: "button",
+            children: [{ type: "text", text: "reset" }],
+            events: {
+                click: { type: "reset" },
+            },
+        },
+    ],
 });
 
 // MAIN

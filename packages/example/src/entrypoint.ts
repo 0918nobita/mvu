@@ -44,23 +44,7 @@ const update = (msg: Msg, model: Model): [Model, Cmd<Msg>] => {
 
 // SUBSCRIPTIONS
 
-const taskID = Symbol("reset");
-
-const task: TaskWithDispatch<Msg> = (dispatch) => {
-    const id = setInterval(() => {
-        dispatch({ type: "increment" });
-    }, 1000);
-
-    return {
-        dispose: () => {
-            clearInterval(id);
-        },
-    };
-};
-
-const sub = Sub.ofTask(taskID, task);
-
-const subscriptions = (_model: Model): Sub<Msg> => sub;
+const subscriptions = (_model: Model): Sub<Msg> => Sub.none();
 
 // VIEW
 

@@ -1,4 +1,4 @@
-import { Renderer } from "@0918nobita-mvu/renderer";
+import { Dispatch, Renderer } from "@0918nobita-mvu/renderer";
 
 export type VNodeText = {
     type: "text";
@@ -54,14 +54,15 @@ const renderVNodeText = (vnodeText: VNodeText): LinkedVNodeText => {
 
 function renderVNodeFragment<Msg>(
     fragment: VNodeFragment<Msg>,
-    parentElement: HTMLElement
+    parentElement: HTMLElement,
+    dispatch: Dispatch<Msg>
 ): LinkedVNodeFragment {
     const children: LinkedVNode[] = [];
 
     for (const child of fragment.children) {
         switch (child.type) {
             case "tag": {
-                const renderedChild = renderVNodeTag(child);
+                const renderedChild = renderVNodeTag(child, dispatch);
 
                 children.push(renderedChild);
 
@@ -70,7 +71,11 @@ function renderVNodeFragment<Msg>(
             }
 
             case "fragment": {
-                const renderedChild = renderVNodeFragment(child, parentElement);
+                const renderedChild = renderVNodeFragment(
+                    child,
+                    parentElement,
+                    dispatch
+                );
 
                 children.push(...renderedChild.children);
                 break;
@@ -84,7 +89,10 @@ function renderVNodeFragment<Msg>(
     };
 }
 
-function renderVNodeTag<Msg>(tag: VNodeTag<Msg>): LinkedVNodeTag {
+function renderVNodeTag<Msg>(
+    tag: VNodeTag<Msg>,
+    dispatch: Dispatch<Msg>
+): LinkedVNodeTag {
     const element = document.createElement(tag.tagName);
 
     const children: LinkedVNode[] = [];
@@ -92,7 +100,7 @@ function renderVNodeTag<Msg>(tag: VNodeTag<Msg>): LinkedVNodeTag {
     for (const child of tag.children) {
         switch (child.type) {
             case "fragment": {
-                const fragment = renderVNodeFragment(child, element);
+                const fragment = renderVNodeFragment(child, element, dispatch);
 
                 children.push(...fragment.children);
                 break;
@@ -108,15 +116,27 @@ function renderVNodeTag<Msg>(tag: VNodeTag<Msg>): LinkedVNodeTag {
             }
 
             case "tag": {
-                const renderedChild = renderVNodeTag(child);
+                const tag = renderVNodeTag(child, dispatch);
 
-                element.appendChild(renderedChild.linkedElement);
+                element.appendChild(tag.linkedElement);
 
-                children.push(renderedChild);
+                children.push(tag);
                 break;
             }
         }
     }
+
+    for (const [eventName, msg] of Object.entries(tag.events)) {
+        if (eventName === "click") {
+            element.addEventListener("click", () => {
+                dispatch(msg);
+            });
+            continue;
+        }
+
+        console.warn("Unknown event: ", eventName);
+    }
+
     return {
         type: "tag",
         tagName: tag.tagName,
@@ -128,7 +148,8 @@ function renderVNodeTag<Msg>(tag: VNodeTag<Msg>): LinkedVNodeTag {
 const update = <Msg>(
     oldVNode: LinkedVNode,
     newVNode: VNode<Msg>,
-    parentElement: HTMLElement
+    parentElement: HTMLElement,
+    dispatch: Dispatch<Msg>
 ): LinkedVNode => {
     if (oldVNode.type === "fragment") {
         if (newVNode.type === "fragment") {
@@ -139,7 +160,8 @@ const update = <Msg>(
                     const newChild = update(
                         oldVNode.children[i],
                         newVNode.children[i],
-                        parentElement
+                        parentElement,
+                        dispatch
                     );
 
                     children.push(newChild);
@@ -157,7 +179,8 @@ const update = <Msg>(
                     const newChild = update(
                         oldVNode.children[i],
                         newVNode.children[i],
-                        parentElement
+                        parentElement,
+                        dispatch
                     );
 
                     children.push(newChild);
@@ -173,7 +196,8 @@ const update = <Msg>(
                     if (newChild.type === "fragment") {
                         const fragment = renderVNodeFragment(
                             newChild,
-                            parentElement
+                            parentElement,
+                            dispatch
                         );
                         children.push(...fragment.children);
                         continue;
@@ -186,7 +210,7 @@ const update = <Msg>(
                         continue;
                     }
 
-                    const tag = renderVNodeTag(newChild);
+                    const tag = renderVNodeTag(newChild, dispatch);
                     parentElement.appendChild(tag.linkedElement);
                     children.push(tag);
                 }
@@ -207,7 +231,7 @@ const update = <Msg>(
             };
         }
 
-        const tag = renderVNodeTag(newVNode);
+        const tag = renderVNodeTag(newVNode, dispatch);
 
         parentElement.appendChild(tag.linkedElement);
 
@@ -218,7 +242,7 @@ const update = <Msg>(
         if (newVNode.type === "fragment") {
             parentElement.removeChild(oldVNode.linkedTextNode);
 
-            return renderVNodeFragment(newVNode, parentElement);
+            return renderVNodeFragment(newVNode, parentElement, dispatch);
         }
 
         if (newVNode.type === "text") {
@@ -233,7 +257,7 @@ const update = <Msg>(
 
         parentElement.removeChild(oldVNode.linkedTextNode);
 
-        const tag = renderVNodeTag(newVNode);
+        const tag = renderVNodeTag(newVNode, dispatch);
 
         parentElement.appendChild(tag.linkedElement);
 
@@ -243,7 +267,7 @@ const update = <Msg>(
     if (newVNode.type === "fragment") {
         parentElement.removeChild(oldVNode.linkedElement);
 
-        return renderVNodeFragment(newVNode, parentElement);
+        return renderVNodeFragment(newVNode, parentElement, dispatch);
     }
 
     if (newVNode.type === "text") {
@@ -262,7 +286,8 @@ const update = <Msg>(
         const newChild = update(
             oldVNode.children[index],
             child,
-            oldVNode.linkedElement
+            oldVNode.linkedElement,
+            dispatch
         );
 
         children.push(newChild);
@@ -284,8 +309,8 @@ export const createRenderer = <Msg>(
         children: [],
     };
 
-    const renderer: Renderer<VNode<Msg>, Msg> = (vnode) => {
-        const updated = update(currentVNode, vnode, root);
+    const renderer: Renderer<VNode<Msg>, Msg> = (vnode, dispatch) => {
+        const updated = update(currentVNode, vnode, root, dispatch);
         currentVNode = updated;
     };
 

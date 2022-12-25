@@ -9,15 +9,26 @@ tasks:
     - task: console-renderer:build
     - task: vdom-renderer:build
     - task: framework:build
-    - task: example:build
-  dev:
+    - task: counter:build
+    - task: random-cat:build
+
+  dev-counter:
     deps:
       - stream:watch
       - renderer:watch
       - console-renderer:watch
       - vdom-renderer:watch
       - framework:watch
-      - example:dev
+      - counter:dev
+
+  dev-random-cat:
+    deps:
+      - stream:watch
+      - renderer:watch
+      - console-renderer:watch
+      - vdom-renderer:watch
+      - framework:watch
+      - random-cat:dev
 
 includes:
   stream:
@@ -40,6 +51,10 @@ includes:
     taskfile: ./packages/framework/Taskfile.yml
     dir: ./packages/framework
 
-  example:
-    taskfile: ./packages/example/Taskfile.yml
-    dir: ./packages/example
+  counter:
+    taskfile: ./packages/examples/counter/Taskfile.yml
+    dir: ./packages/examples/counter
+
+  random-cat:
+    taskfile: ./packages/examples/random-cat/Taskfile.yml
+    dir: ./packages/examples/random-cat

@@ -22,7 +22,7 @@ export const renderTag = <Msg>(
 
             case "tag":
                 const nestedTag = renderTag(renderers, {
-                    vnodeTag,
+                    vnodeTag: child,
                     dispatch,
                 });
                 children.push(nestedTag);
@@ -34,6 +34,10 @@ export const renderTag = <Msg>(
                 children.push(text);
                 tag.appendChild(text.linkedElement);
         }
+    }
+
+    for (const [attrName, value] of Object.entries(vnodeTag.attrs)) {
+        tag.setAttribute(attrName, value);
     }
 
     for (const [eventName, msg] of Object.entries(vnodeTag.events)) {
@@ -50,6 +54,7 @@ export const renderTag = <Msg>(
     return {
         type: "tag",
         tagName: vnodeTag.tagName,
+        attrs: vnodeTag.attrs,
         children,
         linkedElement: tag,
     };

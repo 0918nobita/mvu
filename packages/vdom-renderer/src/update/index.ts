@@ -89,6 +89,7 @@ export const update: UpdateFn = ({
         oldTag: oldVNode,
         newTag: newVNode,
         renderers,
+        parentElement,
         dispatch,
     });
 };

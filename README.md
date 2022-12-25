@@ -20,8 +20,16 @@ task prepare
 task build
 ```
 
-## 開発サーバの起動
+## サンプル
+
+### カウンターアプリ
 
 ```bash
-task dev
+task dev-counter
+```
+
+### ランダムで猫の画像を取得・表示するアプリ
+
+```bash
+task dev-random-cat
 ```

@@ -14,15 +14,28 @@ importers:
     devDependencies:
       typescript: 4.9.4
 
-  packages/example:
+  packages/examples/counter:
     specifiers:
-      '@0918nobita-mvu/framework': workspace:../framework
-      '@0918nobita-mvu/vdom-renderer': workspace:../vdom-renderer
+      '@0918nobita-mvu/framework': workspace:../../framework
+      '@0918nobita-mvu/vdom-renderer': workspace:../../vdom-renderer
       typescript: 4.9.4
       vite: 4.0.3
     dependencies:
-      '@0918nobita-mvu/framework': link:../framework
-      '@0918nobita-mvu/vdom-renderer': link:../vdom-renderer
+      '@0918nobita-mvu/framework': link:../../framework
+      '@0918nobita-mvu/vdom-renderer': link:../../vdom-renderer
+    devDependencies:
+      typescript: 4.9.4
+      vite: 4.0.3
+
+  packages/examples/random-cat:
+    specifiers:
+      '@0918nobita-mvu/framework': workspace:../../framework
+      '@0918nobita-mvu/vdom-renderer': workspace:../../vdom-renderer
+      typescript: 4.9.4
+      vite: 4.0.3
+    dependencies:
+      '@0918nobita-mvu/framework': link:../../framework
+      '@0918nobita-mvu/vdom-renderer': link:../../vdom-renderer
     devDependencies:
       typescript: 4.9.4
       vite: 4.0.3

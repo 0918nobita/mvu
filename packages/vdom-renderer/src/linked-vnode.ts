@@ -7,6 +7,7 @@ export type VText = {
 export type Tag = {
     type: "tag";
     tagName: string;
+    attrs: Record<string, string>;
     children: VNode[];
     linkedElement: HTMLElement;
 };

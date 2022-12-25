@@ -1,5 +1,12 @@
 import { Cmd, Sub, Program, run } from "@0918nobita-mvu/framework";
-import { VNode, createRenderer } from "@0918nobita-mvu/vdom-renderer";
+import {
+    VNode,
+    createRenderer,
+    fragment,
+    p,
+    text,
+    button,
+} from "@0918nobita-mvu/vdom-renderer";
 
 // ARGUMENT
 
@@ -42,33 +49,12 @@ const subscriptions = (_model: Model): Sub<Msg> => Sub.none();
 
 // VIEW
 
-const view = (model: Model): VNode<Msg> => ({
-    type: "fragment",
-    children: [
-        {
-            type: "tag",
-            tagName: "p",
-            children: [{ type: "text", text: `Count: ${model.count}` }],
-            events: {},
-        },
-        {
-            type: "tag",
-            tagName: "button",
-            children: [{ type: "text", text: "+1" }],
-            events: {
-                click: { type: "increment" },
-            },
-        },
-        {
-            type: "tag",
-            tagName: "button",
-            children: [{ type: "text", text: "reset" }],
-            events: {
-                click: { type: "reset" },
-            },
-        },
-    ],
-});
+const view = (model: Model): VNode<Msg> =>
+    fragment(
+        p({}, {}, [text(`Count: ${model.count}`)]),
+        button({}, { click: { type: "increment" } }, [text("+1")]),
+        button({}, { click: { type: "reset" } }, [text("reset")])
+    );
 
 // MAIN
 

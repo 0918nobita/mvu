@@ -6,6 +6,7 @@ export type VText = {
 export type Tag<Msg> = {
     type: "tag";
     tagName: string;
+    attrs: Record<string, string>;
     children: VNode<Msg>[];
     events: Record<string, Msg>;
 };

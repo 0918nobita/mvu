@@ -2,7 +2,7 @@ import { Renderer } from "@0918nobita-mvu/renderer";
 
 import { Cmd } from "./cmd";
 import { Disposable } from "./disposable";
-import { BehaviorSubject, Subject } from "@0918nobita-mvu/stream";
+import { BehaviorSubject, Subject } from "./stream";
 import { Sub, TaskID } from "./sub";
 
 export type Program<Arg, Model, Msg, View> = {

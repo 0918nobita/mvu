@@ -4,7 +4,6 @@ tasks:
   prepare: pnpm install
 
   build:
-    - task: stream:build
     - task: renderer:build
     - task: vdom-renderer:build
     - task: framework:build
@@ -13,7 +12,6 @@ tasks:
 
   dev-counter:
     deps:
-      - stream:watch
       - renderer:watch
       - vdom-renderer:watch
       - framework:watch
@@ -21,17 +19,12 @@ tasks:
 
   dev-random-cat:
     deps:
-      - stream:watch
       - renderer:watch
       - vdom-renderer:watch
       - framework:watch
       - random-cat:dev
 
 includes:
-  stream:
-    taskfile: ./packages/stream/Taskfile.yml
-    dir: ./packages/stream
-
   renderer:
     taskfile: ./packages/renderer/Taskfile.yml
     dir: ./packages/renderer

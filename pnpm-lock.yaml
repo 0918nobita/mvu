@@ -34,21 +34,13 @@ importers:
   packages/framework:
     specifiers:
       '@0918nobita-mvu/renderer': workspace:../renderer
-      '@0918nobita-mvu/stream': workspace:../stream
       typescript: 4.9.4
     dependencies:
       '@0918nobita-mvu/renderer': link:../renderer
-      '@0918nobita-mvu/stream': link:../stream
     devDependencies:
       typescript: 4.9.4
 
   packages/renderer:
-    specifiers:
-      typescript: 4.9.4
-    devDependencies:
-      typescript: 4.9.4
-
-  packages/stream:
     specifiers:
       typescript: 4.9.4
     devDependencies:

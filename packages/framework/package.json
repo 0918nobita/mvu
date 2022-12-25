@@ -7,7 +7,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@0918nobita-mvu/renderer": "workspace:../renderer"
+    "@0918nobita-mvu/renderer": "workspace:../renderer",
+    "@0918nobita-mvu/stream": "workspace:../stream"
   },
   "devDependencies": {
     "typescript": "4.9.4"

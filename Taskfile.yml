@@ -4,6 +4,7 @@ tasks:
   prepare: pnpm install
 
   build:
+    - task: stream:build
     - task: renderer:build
     - task: console-renderer:build
     - task: vdom-renderer:build
@@ -11,6 +12,7 @@ tasks:
     - task: example:build
   dev:
     deps:
+      - stream:watch
       - renderer:watch
       - console-renderer:watch
       - vdom-renderer:watch
@@ -18,6 +20,10 @@ tasks:
       - example:dev
 
 includes:
+  stream:
+    taskfile: ./packages/stream/Taskfile.yml
+    dir: ./packages/stream
+
   renderer:
     taskfile: ./packages/renderer/Taskfile.yml
     dir: ./packages/renderer

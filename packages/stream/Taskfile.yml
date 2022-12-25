@@ -1,0 +1,10 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - pnpm exec tsc
+    sources:
+      - src/**/*.ts
+
+  watch: pnpm exec tsc --watch --preserveWatchOutput

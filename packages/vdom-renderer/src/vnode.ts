@@ -3,12 +3,17 @@ export type VText = {
     text: string;
 };
 
+export type Events<Msg> = {
+    click?: Msg;
+    input?: (value: string) => Msg;
+};
+
 export type Tag<Msg> = {
     type: "tag";
     tagName: string;
     attrs: Record<string, string>;
     children: VNode<Msg>[];
-    events: Record<string, Msg>;
+    events: Events<Msg>;
 };
 
 export type Fragment<Msg> = {

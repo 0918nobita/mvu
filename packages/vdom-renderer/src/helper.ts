@@ -1,4 +1,4 @@
-import { Fragment, VNode, VText } from "./vnode";
+import { Events, Fragment, VNode, VText } from "./vnode";
 
 export const fragment = <Msg>(
     ...children: Array<VNode<Msg>>
@@ -14,7 +14,7 @@ export const text = (text: string): VText => ({
 
 export const div = <Msg>(
     attrs: Record<string, string> = {},
-    events: Record<string, Msg> = {},
+    events: Events<Msg> = {},
     children: Array<VNode<Msg>> = []
 ): VNode<Msg> => ({
     type: "tag",
@@ -26,7 +26,7 @@ export const div = <Msg>(
 
 export const p = <Msg>(
     attrs: Record<string, string> = {},
-    events: Record<string, Msg> = {},
+    events: Events<Msg> = {},
     children: Array<VNode<Msg>> = []
 ): VNode<Msg> => ({
     type: "tag",
@@ -38,7 +38,7 @@ export const p = <Msg>(
 
 export const button = <Msg>(
     attrs: Record<string, string> = {},
-    events: Record<string, Msg> = {},
+    events: Events<Msg> = {},
     children: Array<VNode<Msg>> = []
 ): VNode<Msg> => ({
     type: "tag",
@@ -48,9 +48,20 @@ export const button = <Msg>(
     events,
 });
 
+export const input = <Msg>(
+    attrs: Record<string, string> = {},
+    events: Events<Msg> = {}
+): VNode<Msg> => ({
+    type: "tag",
+    tagName: "input",
+    attrs,
+    events,
+    children: [],
+});
+
 export const img = <Msg>(
     attrs: Record<string, string> = {},
-    events: Record<string, Msg> = {}
+    events: Events<Msg> = {}
 ): VNode<Msg> => ({
     type: "tag",
     tagName: "img",

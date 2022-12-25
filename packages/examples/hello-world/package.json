@@ -1,0 +1,13 @@
+{
+  "name": "@0918nobita-mvu/hello-world",
+  "version": "0.1.0",
+  "license": "CC0-1.0",
+  "dependencies": {
+    "@0918nobita-mvu/vdom-renderer": "workspace:../../vdom-renderer",
+    "@0918nobita-mvu/framework": "workspace:../../framework"
+  },
+  "devDependencies": {
+    "typescript": "4.9.4",
+    "vite": "4.0.3"
+  }
+}

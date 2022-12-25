@@ -24,6 +24,13 @@ tasks:
       - framework:watch
       - random-cat:dev
 
+  dev-hello-world:
+    deps:
+      - renderer:watch
+      - vdom-renderer:watch
+      - framework:watch
+      - hello-world:dev
+
 includes:
   renderer:
     taskfile: ./packages/renderer/Taskfile.yml
@@ -44,3 +51,7 @@ includes:
   random-cat:
     taskfile: ./packages/examples/random-cat/Taskfile.yml
     dir: ./packages/examples/random-cat
+
+  hello-world:
+    taskfile: ./packages/examples/hello-world/Taskfile.yml
+    dir: ./packages/examples/hello-world

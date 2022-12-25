@@ -40,15 +40,27 @@ export const renderTag = <Msg>(
         tag.setAttribute(attrName, value);
     }
 
-    for (const [eventName, msg] of Object.entries(vnodeTag.events)) {
+    for (const eventName in vnodeTag.events) {
         if (eventName === "click") {
+            const msg = vnodeTag.events[eventName];
+            if (!msg) continue;
             tag.addEventListener("click", () => {
                 dispatch(msg);
             });
             continue;
         }
 
-        console.warn("Unknown event: ", eventName);
+        if (eventName === "input") {
+            const msgConstructor = vnodeTag.events[eventName];
+            if (!msgConstructor) continue;
+            tag.addEventListener("input", (event) => {
+                const target = event.target as HTMLInputElement;
+                dispatch(msgConstructor(target.value));
+            });
+            continue;
+        }
+
+        console.warn("Unknown event:", eventName);
     }
 
     return {

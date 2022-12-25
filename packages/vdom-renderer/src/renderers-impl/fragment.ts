@@ -1,5 +1,5 @@
 import * as Linked from "../linked-vnode";
-import { FragmentRendererArgs, Renderers } from "./renderers";
+import { FragmentRendererArgs, Renderers } from "../renderers";
 
 export const renderFragment = <Msg>(
     renderers: Renderers,
@@ -10,7 +10,7 @@ export const renderFragment = <Msg>(
     for (const child of vnodeFragment.children) {
         switch (child.type) {
             case "fragment":
-                const nestedFragment = renderers.fragment<Msg>(renderers, {
+                const nestedFragment = renderFragment(renderers, {
                     vnodeFragment: child,
                     parentElement,
                     dispatch,

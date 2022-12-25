@@ -1,5 +1,5 @@
 import { renderFragment } from "./fragment";
-import { Renderers } from "./renderers";
+import { Renderers } from "../renderers";
 import { renderTag } from "./tag";
 import { renderText } from "./text";
 

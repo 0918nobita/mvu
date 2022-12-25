@@ -1,5 +1,5 @@
 import * as Linked from "../linked-vnode";
-import { Renderers, TagRendererArgs } from "./renderers";
+import { Renderers, TagRendererArgs } from "../renderers";
 
 export const renderTag = <Msg>(
     renderers: Renderers,
@@ -21,7 +21,7 @@ export const renderTag = <Msg>(
                 break;
 
             case "tag":
-                const nestedTag = renderers.tag<Msg>(renderers, {
+                const nestedTag = renderTag(renderers, {
                     vnodeTag,
                     dispatch,
                 });

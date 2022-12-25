@@ -1,7 +1,7 @@
 import { Renderer } from "@0918nobita-mvu/renderer";
 
 import * as Linked from "./linked-vnode";
-import { renderers } from "./render";
+import { renderers } from "./renderers-impl";
 import { update } from "./update";
 import { VNode } from "./vnode";
 

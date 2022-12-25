@@ -1,6 +1,6 @@
 import { Dispatch } from "@0918nobita-mvu/renderer";
-import * as Linked from "../linked-vnode";
-import * as VNode from "../vnode";
+import * as Linked from "./linked-vnode";
+import * as VNode from "./vnode";
 
 export type FragmentRendererArgs<Msg> = {
     vnodeFragment: VNode.Fragment<Msg>;

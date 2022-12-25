@@ -6,7 +6,6 @@ tasks:
   build:
     - task: stream:build
     - task: renderer:build
-    - task: console-renderer:build
     - task: vdom-renderer:build
     - task: framework:build
     - task: counter:build
@@ -16,7 +15,6 @@ tasks:
     deps:
       - stream:watch
       - renderer:watch
-      - console-renderer:watch
       - vdom-renderer:watch
       - framework:watch
       - counter:dev
@@ -25,7 +23,6 @@ tasks:
     deps:
       - stream:watch
       - renderer:watch
-      - console-renderer:watch
       - vdom-renderer:watch
       - framework:watch
       - random-cat:dev
@@ -38,10 +35,6 @@ includes:
   renderer:
     taskfile: ./packages/renderer/Taskfile.yml
     dir: ./packages/renderer
-
-  console-renderer:
-    taskfile: ./packages/console-renderer/Taskfile.yml
-    dir: ./packages/console-renderer
 
   vdom-renderer:
     taskfile: ./packages/vdom-renderer/Taskfile.yml

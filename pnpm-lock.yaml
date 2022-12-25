@@ -5,15 +5,6 @@ importers:
   .:
     specifiers: {}
 
-  packages/console-renderer:
-    specifiers:
-      '@0918nobita-mvu/renderer': workspace:../renderer
-      typescript: 4.9.4
-    dependencies:
-      '@0918nobita-mvu/renderer': link:../renderer
-    devDependencies:
-      typescript: 4.9.4
-
   packages/examples/counter:
     specifiers:
       '@0918nobita-mvu/framework': workspace:../../framework

@@ -87,8 +87,4 @@ const program: Program<Arg, Model, Msg, VNode<Msg>> = {
     view,
 };
 
-run(
-    program,
-    { initialCount: 0 },
-    createRenderer(document.getElementById("app")!)
-);
+run(program, {}, createRenderer(document.getElementById("app")!));

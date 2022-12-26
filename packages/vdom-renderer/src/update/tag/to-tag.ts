@@ -2,11 +2,12 @@ import { Dispatch } from "@0918nobita-mvu/renderer";
 
 import * as Linked from "../../linked-vnode";
 import { Renderers } from "../../renderers";
+import { updateEventHandler } from "../../update-event-handler";
 import { Tag } from "../../vnode";
 import { UpdateFn } from "../sig";
 
 type UpdateTagToTag<Msg> = {
-    oldTag: Linked.Tag;
+    oldTag: Linked.Tag<Msg>;
     newTag: Tag<Msg>;
     renderers: Renderers;
     parentElement: HTMLElement;
@@ -16,9 +17,9 @@ type UpdateTagToTag<Msg> = {
 export const updateTagToTag = <Msg>(
     update: UpdateFn,
     { oldTag, newTag, renderers, dispatch, parentElement }: UpdateTagToTag<Msg>
-): Linked.Tag => {
+): Linked.Tag<Msg> => {
     if (oldTag.tagName !== newTag.tagName) {
-        const element = renderers.tag<Msg>(renderers, {
+        const element = renderers.tag(renderers, {
             vnodeTag: newTag,
             dispatch,
         });
@@ -26,19 +27,27 @@ export const updateTagToTag = <Msg>(
         return element;
     }
 
-    for (const name of Object.keys(oldTag.attrs)) {
-        if (!(name in newTag.attrs)) {
-            oldTag.linkedElement.removeAttribute(name);
+    for (const attrName in oldTag.attrs) {
+        if (!(attrName in newTag.attrs)) {
+            oldTag.linkedElement.removeAttribute(attrName);
         }
     }
 
-    for (const [name, value] of Object.entries(newTag.attrs)) {
-        if (oldTag.attrs[name] !== value) {
-            oldTag.linkedElement.setAttribute(name, value);
+    for (const attrName in newTag.attrs) {
+        if (oldTag.attrs[attrName] !== newTag.attrs[attrName]) {
+            oldTag.linkedElement.setAttribute(attrName, newTag.attrs[attrName]);
         }
     }
 
-    const children: Linked.VNode[] = [];
+    const eventHandlers = updateEventHandler(
+        oldTag.linkedElement,
+        oldTag.eventHandlers,
+        oldTag.events,
+        newTag.events,
+        dispatch
+    );
+
+    const children: Linked.VNode<Msg>[] = [];
 
     for (const [index, child] of newTag.children.entries()) {
         const newChild = update({
@@ -58,5 +67,7 @@ export const updateTagToTag = <Msg>(
         attrs: newTag.attrs,
         children,
         linkedElement: oldTag.linkedElement,
+        events: newTag.events,
+        eventHandlers,
     };
 };

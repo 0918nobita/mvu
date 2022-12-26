@@ -4,17 +4,28 @@ export type VText = {
     linkedElement: Text;
 };
 
-export type Tag = {
+type Events<Msg> = Partial<{
+    click: Msg;
+    input: (value: string) => Msg;
+}>;
+
+export type EventName = "click" | "input";
+
+export type EventHandlers = Map<EventName, EventListener>;
+
+export type Tag<Msg> = {
     type: "tag";
     tagName: string;
     attrs: Record<string, string>;
-    children: VNode[];
+    children: VNode<Msg>[];
     linkedElement: HTMLElement;
+    events: Events<Msg>;
+    eventHandlers: EventHandlers;
 };
 
-export type Fragment = {
+export type Fragment<Msg> = {
     type: "fragment";
-    children: VNode[];
+    children: VNode<Msg>[];
 };
 
-export type VNode = VText | Tag | Fragment;
+export type VNode<Msg> = VText | Tag<Msg> | Fragment<Msg>;

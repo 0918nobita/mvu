@@ -6,7 +6,7 @@ import * as Linked from "../../linked-vnode";
 import { Renderers } from "../../renderers";
 
 type UpdateFragmentToFragmentArgs<Msg> = {
-    oldFragment: Linked.Fragment;
+    oldFragment: Linked.Fragment<Msg>;
     newFragment: Fragment<Msg>;
     parentElement: HTMLElement;
     renderers: Renderers;
@@ -22,8 +22,8 @@ export const updateFragmentToFragment = <Msg>(
         renderers,
         dispatch,
     }: UpdateFragmentToFragmentArgs<Msg>
-): Linked.Fragment => {
-    const children: Linked.VNode[] = [];
+): Linked.Fragment<Msg> => {
+    const children: Linked.VNode<Msg>[] = [];
 
     if (oldFragment.children.length >= newFragment.children.length) {
         for (let i = 0; i < newFragment.children.length; i++) {
@@ -66,7 +66,7 @@ export const updateFragmentToFragment = <Msg>(
             const newChild = newFragment.children[i];
 
             if (newChild.type === "fragment") {
-                const fragment = renderers.fragment<Msg>(renderers, {
+                const fragment = renderers.fragment(renderers, {
                     vnodeFragment: newChild,
                     parentElement,
                     dispatch,

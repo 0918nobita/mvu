@@ -5,7 +5,7 @@ import { Renderers } from "../../renderers";
 import { Fragment } from "../../vnode";
 
 type UpdateTagToFragmentArgs<Msg> = {
-    oldTag: Linked.Tag;
+    oldTag: Linked.Tag<Msg>;
     newFragment: Fragment<Msg>;
     renderers: Renderers;
     parentElement: HTMLElement;
@@ -18,7 +18,7 @@ export const updateTagToFragment = <Msg>({
     renderers,
     parentElement,
     dispatch,
-}: UpdateTagToFragmentArgs<Msg>): Linked.Fragment => {
+}: UpdateTagToFragmentArgs<Msg>): Linked.Fragment<Msg> => {
     parentElement.removeChild(oldTag.linkedElement);
 
     return renderers.fragment(renderers, {

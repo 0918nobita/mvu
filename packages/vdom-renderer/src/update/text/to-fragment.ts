@@ -18,7 +18,7 @@ export const updateTextToFragment = <Msg>({
     renderers,
     parentElement,
     dispatch,
-}: UpdateTextToFragmentArgs<Msg>): Linked.Fragment => {
+}: UpdateTextToFragmentArgs<Msg>): Linked.Fragment<Msg> => {
     parentElement.removeChild(oldText.linkedElement);
 
     return renderers.fragment(renderers, {

@@ -16,7 +16,7 @@ type RenderRequest<Msg> = {
  * 処理中に更新を要求された場合、その処理が終了した後に最新の要求のみを処理する
  */
 class SingleRenderer<Msg> {
-    #currentVNode: Linked.VNode = {
+    #currentVNode: Linked.VNode<Msg> = {
         type: "fragment",
         children: [],
     };

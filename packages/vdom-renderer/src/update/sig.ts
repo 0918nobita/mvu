@@ -6,10 +6,10 @@ import { VNode } from "../vnode";
 
 type UpdateFnArgs<Msg> = {
     renderers: Renderers;
-    oldVNode: Linked.VNode;
+    oldVNode: Linked.VNode<Msg>;
     newVNode: VNode<Msg>;
     parentElement: HTMLElement;
     dispatch: Dispatch<Msg>;
 };
 
-export type UpdateFn = <Msg>(args: UpdateFnArgs<Msg>) => Linked.VNode;
+export type UpdateFn = <Msg>(args: UpdateFnArgs<Msg>) => Linked.VNode<Msg>;

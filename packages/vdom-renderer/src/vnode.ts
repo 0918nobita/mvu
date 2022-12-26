@@ -3,10 +3,10 @@ export type VText = {
     text: string;
 };
 
-export type Events<Msg> = {
-    click?: Msg;
-    input?: (value: string) => Msg;
-};
+export type Events<Msg> = Partial<{
+    click: Msg;
+    input: (value: string) => Msg;
+}>;
 
 export type Tag<Msg> = {
     type: "tag";

@@ -16,7 +16,7 @@ export const updateFragmentToTag = <Msg>({
     renderers,
     parentElement,
     dispatch,
-}: UpdateFragmentToTagArgs<Msg>): Linked.Tag => {
+}: UpdateFragmentToTagArgs<Msg>): Linked.Tag<Msg> => {
     const tag = renderers.tag(renderers, {
         vnodeTag: newTag,
         dispatch,

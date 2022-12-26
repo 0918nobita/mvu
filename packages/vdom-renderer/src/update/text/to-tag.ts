@@ -18,7 +18,7 @@ export const updateTextToTag = <Msg>({
     renderers,
     parentElement,
     dispatch,
-}: UpdateTextToTagArgs<Msg>): Linked.Tag => {
+}: UpdateTextToTagArgs<Msg>): Linked.Tag<Msg> => {
     parentElement.removeChild(oldText.linkedElement);
 
     const tag = renderers.tag(renderers, {

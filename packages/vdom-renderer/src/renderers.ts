@@ -17,9 +17,12 @@ export type Renderers = {
     fragment: <Msg>(
         renderers: Renderers,
         args: FragmentRendererArgs<Msg>
-    ) => Linked.Fragment;
+    ) => Linked.Fragment<Msg>;
 
-    tag: <Msg>(renderers: Renderers, args: TagRendererArgs<Msg>) => Linked.Tag;
+    tag: <Msg>(
+        renderers: Renderers,
+        args: TagRendererArgs<Msg>
+    ) => Linked.Tag<Msg>;
 
     text: (vnodeText: VNode.VText) => Linked.VText;
 };
